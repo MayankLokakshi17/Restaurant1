@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Snacks House - Restaurant</title>
+<style>
+/* Basic styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #fafafa;
+}
+header {
+  background: #ff6f61;
+  color: white;
+  padding: 15px;
+  text-align: center;
+}
+.slider {
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+  height: 250px;
+}
+.slider img {
+  width: 100%;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+.product {
+  background: white;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  text-align: center;
+}
+.product img {
+  width: 100%;
+  border-radius: 10px;
+  height: 150px;
+  object-fit: cover;
+}
+button {
+  background: #ff6f61;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.cart, .order-history {
+  padding: 20px;
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Mayank's Snacks House</h1>
+</header>
+<div class="slider">
+  <img src="pizza.jpg" alt="Pizza">
+  <img src="burger.jpg" alt="Burger">
+  <img src="pasta.jpg" alt="Pasta">
+</div>
+<section class="products">
+  <div class="product">
+    <img src="pizza.jpg" alt="Margherita Pizza">
+    <h3>Margherita Pizza</h3>
+    <p>₹250</p>
+    <button onclick="addToCart('Margherita Pizza', 250)">Add to Cart</button>
+  </div>
+  <div class="product">
+    <img src="burger.jpg" alt="Veg Burger">
+    <h3>Veg Burger</h3>
+    <p>₹150</p>
+    <button onclick="addToCart('Veg Burger', 150)">Add to Cart</button>
+  </div>
+  <div class="product">
+    <img src="pasta.jpg" alt="Pasta Alfredo">
+    <h3>Pasta Alfredo</h3>
+    <p>₹200</p>
+    <button onclick="addToCart('Pasta Alfredo', 200)">Add to Cart</button>
+  </div>
+  <div class="product">
+    <img src="fries.jpg" alt="French Fries">
+    <h3>French Fries</h3>
+    <p>₹100</p>
+    <button onclick="addToCart('French Fries', 100)">Add to Cart</button>
+  </div>
+  <div class="product">
+    <img src="sandwich.jpg" alt="Grilled Sandwich">
+    <h3>Grilled Sandwich</h3>
+    <p>₹120</p>
+    <button onclick="addToCart('Grilled Sandwich', 120)">Add to Cart</button>
+  </div>
+  <div class="product">
+    <img src="pasta.jpg" alt="Pasta">
+    <h3>pasta</h3>
+    <p>₹180</p>
+    <button onclick="addToCart('pasta', 180)">Add to Cart</button>
+  </div>
+  <div class="product">
+    <img src="cold coffee.jpg" alt="Cold Coffee">
+    <h3>Cold Coffee</h3>
+    <p>₹90</p>
+    <button onclick="addToCart('Cold Coffee', 90)">Add to Cart</button>
+  </div>
+  <div class="product">
+    <img src="" alt="Fresh Salad">
+    <h3>Fresh Salad</h3>
+    <p>₹80</p>
+    <button onclick="addToCart('Fresh Salad', 80)">Add to Cart</button>
+  </div>
+  <div class="product">
+    <img src="pizza.jpg" alt="Pizza">
+    <h3>pizza</h3>
+    <p>₹220</p>
+    <button onclick="addToCart('Pizza', 220)">Add to Cart</button>
+  </div>
+  <div class="product">
+    <img src="ice cream.jpg" alt="Ice Cream Sundae">
+    <h3>Ice Cream Sundae</h3>
+    <p>₹150</p>
+    <button onclick="addToCart('Ice Cream Sundae', 150)">Add to Cart</button>
+  </div>
+</section>
+<section class="cart">
+  <h2>Cart</h2>
+  <ul id="cart-list"></ul>
+  <p id="total">Total: ₹0</p>
+  <button onclick="checkout()">Proceed to Payment</button>
+</section>
+<section class="order-history">
+  <h2>Order History</h2>
+  <ul id="order-list"></ul>
+</section>
+<script>
+let cart = [];
+let total = 0;
+let orders = [];
+let sliderIndex = 0;
+const sliderImages = document.querySelectorAll('.slider img');
+function showSlide(index) {
+  sliderImages.forEach((img, i) => {
+    img.style.transform = `translateX(${(i - index) * 100}%)`;
+  });
+}
+function nextSlide() {
+  sliderIndex = (sliderIndex + 1) % sliderImages.length;
+  showSlide(sliderIndex);
+}
+setInterval(nextSlide, 3000);
+showSlide(sliderIndex);
+function addToCart(name, price) {
+  cart.push({name, price});
+  total += price;
+  renderCart();
+}
+function renderCart() {
+  const cartList = document.getElementById('cart-list');
+  cartList.innerHTML = '';
+  cart.forEach(item => {
+    const li = document.createElement('li');
+    li.textContent = `${item.name} - ₹${item.price}`;
+    cartList.appendChild(li);
+  });
+  document.getElementById('total').textContent = `Total: ₹${total}`;
+}
+function checkout() {
+  if (cart.length === 0) {
+    alert('Cart is empty');
+    return;
+  }
+  orders.push([...cart]);
+  renderOrders();
+  cart = [];
+  total = 0;
+  renderCart();
+  alert('Payment successful! Order placed.');
+}
+function renderOrders() {
+  const orderList = document.getElementById('order-list');
+  orderList.innerHTML = '';
+  orders.forEach((order, idx) => {
+    const li = document.createElement('li');
+    li.textContent = `Order ${idx + 1}: ${order.map(o => o.name).join(', ')}`;
+    orderList.appendChild(li);
+  });
+}
+</script>
+</body>
+</html>
